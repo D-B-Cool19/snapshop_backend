@@ -1,0 +1,23 @@
+name: Build and Push Docker Image for Flask
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to Alibaba Cloud Docker Registry
+        run: echo ${{ secrets.ALIYUN_PASSWORD }} | docker login --username=${{ secrets.ALIYUN_USERNAME }} --password-stdin registry.cn-hangzhou.aliyuncs.com
+
+      - name: Build Docker image
+        run: docker build -t registry.cn-hangzhou.aliyuncs.com/snapshop/backend:latest .
+
+      - name: Push Docker image
+        run: docker push registry.cn-hangzhou.aliyuncs.com/snapshop/backend:latest
