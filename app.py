@@ -70,6 +70,12 @@ def hello_world():
     return render_template("index.html", username=username)
 
 
+@app.route('/api')
+def hello_world2():
+    username = session.get('username')  # 获取当前用户的用户名
+    return render_template("index.html", username=username)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -228,4 +234,4 @@ def delete_user():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
