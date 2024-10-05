@@ -1,0 +1,48 @@
+
+
+.register-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    height: 570px; /* 根据内容调整高度 */
+}
+
+.register-header, form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column; /* 使表单元素垂直排列 */
+    align-items: center; /* 使表单元素在交叉轴上居中 */
+}
+
+.form-input {
+    margin-bottom: 30px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+.register-button {
+    width: 50%;
+    padding: 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.register-button:hover {
+    background-color: #0056b3;
+}

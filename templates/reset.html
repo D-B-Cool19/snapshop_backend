@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>重置密码</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/resetsytle.css')}}">
+    <style>
+        body {
+    background-image: url('static/image/fig3.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+    </style>
+</head>
+<body>
+    <div class="reset-password-container">
+        <div class="reset-password-header">
+            <h2>重置密码</h2>
+        </div>
+        <form id="resetPasswordForm">
+            <input type="password" class="form-input" placeholder="请输入新密码" required>
+            <input type="password" class="form-input" placeholder="再次确认密码" required>
+            <button type="submit" class="reset-button">确认</button>
+        </form>
+        <div class="back-to-login">
+            <a href="{{url_for('login')}}">返回登录</a>
+        </div>
+    </div>
+</body>
+</html>

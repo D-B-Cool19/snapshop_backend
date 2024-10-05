@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>人脸识别登录</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/faceIDstyle.css') }}">
+    <style>
+        body {
+    background-image: url('/static/image/fig4.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+    </style>
+</head>
+<body>
+    <div class="faceID-container">
+        <!-- 人脸识别摄像头区域 -->
+        <div class="camera-area">
+        <!-- 摄像头视频显示区域 -->
+        <video id="video" width="300" height="300" autoplay></video>
+            <!-- 控制按钮 -->
+            <button id="startCamera">启动摄像头</button>
+            <button id="stopCamera">停止摄像头</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/faceID.js') }}"></script>
+</body>
+</html>
