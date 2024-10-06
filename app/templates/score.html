@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>积分商城</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    header {
+      background-color: #333;
+      color: white;
+      padding: 10px 0;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
+
+    .nav ul li {
+      margin-left: 20px;
+    }
+
+    .nav ul li a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .product-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .product {
+      border: 1px solid #ddd;
+      margin: 10px;
+      padding: 10px;
+      width: 23%;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product img {
+      width: 100%;
+      height: auto;
+    }
+
+    .product h3 {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .product p {
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .product .points {
+      color: #e91e63;
+      font-weight: bold;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      margin-top: 20px;
+    }
+
+    footer p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="nav">
+        <ul>
+          <li><a href="{{url_for('hello_world')}}">首页</a></li>
+          <li><a href="cart.html">购物车</a></li>
+          <li><a href="account.html">我的账户</a></li>
+          <li><a href="account.html">帮助中心</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>积分商城</h1>
+    <div class="product-list">
+      <div class="product">
+        <img src="{{ url_for('static', filename='image/1.jpg') }}" alt="商品1">
+        <h3>NVIDIA RTX4090 24G</h3>
+        <p>电子设备</p>
+        <p>所需积分：<span class="points">19999</span></p>
+        <button onclick="window.location.href='{{url_for('score_suc')}}'">兑换</button>
+      </div>
+      <div class="product">
+        <img src="{{ url_for('static', filename='image/2.png') }}" alt="商品2">
+        <h3>ROG幻16 air笔记本电脑</h3>
+        <p>电子设备</p>
+        <p>所需积分：<span class="points">19999</span></p>
+        <button onclick="window.location.href='{{url_for('score_suc')}}'">兑换</button>
+      </div>
+      <div class="product">
+        <img src="{{ url_for('static', filename='image/3.png') }}" alt="商品3">
+        <h3>ROG HYPERION 创世神机箱</h3>
+        <p>电子设备</p>
+        <p>所需积分：<span class="points">4999</span></p>
+        <button onclick="window.location.href='{{url_for('score_suc')}}'">兑换</button>
+      </div>
+      <div class="product">
+        <img src="{{ url_for('static', filename='image/4.png') }}" alt="商品4">
+        <h3>ROG GT-AX11000 Pro路由器</h3>
+        <p>电子设备</p>
+        <p>所需积分：<span class="points">3999</span></p>
+        <button onclick="window.location.href='{{url_for('score_suc')}}'">兑换</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 积分商城. 版权所有.</p>
+    </div>
+  </footer>
+</body>
+</html>

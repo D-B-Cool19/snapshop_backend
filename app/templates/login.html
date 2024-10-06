@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>登录界面</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loginstyle.css') }}">
+    <style>
+        body {
+            background-image: url('../static/image/fig3.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <!-- 人脸识别图标和说明文字 -->
+    <div class="login-method">
+        <img src="{{ url_for('static',filename='image/fig1.png') }}" alt="人脸识别" class="face-recognition-icon">
+    </div>
+    <!-- 人脸识别说明文字，现在是一个链接 -->
+    <div class="login-method">
+        <a href="{{ url_for('faceID') }}" class="login-method-description">使用人脸识别快速登录</a>
+    </div>
+
+    <div class="login-header">
+        <h2>或者使用账户登录</h2>
+    </div>
+    <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+        <!-- 表单内容 -->
+        <input type="text" class="form-input" name=username placeholder="用户名" required>
+        <input type="password" class="form-input" name=password placeholder="密码" required>
+        <button type="submit" class="login-button">登录</button>
+    </form>
+    <div class="forgot-password-container">
+        <!-- 忘记密码链接 -->
+        <a href="{{ url_for('forgetpassword') }}" class="forget-password-button">忘记密码</a>
+        <!-- 注册链接 -->
+        <a href="{{ url_for('register') }}" class="register-button">注册</a>
+    </div>
+</div>
+</body>
