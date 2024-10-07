@@ -1,3 +1,4 @@
+import traceback
 from typing import Optional
 from flask import Blueprint, request, jsonify
 from werkzeug.datastructures import FileStorage
@@ -25,6 +26,7 @@ def embedding():
     try:
         embeddings = calculate_embedding(face_img)
     except Exception as e:
+        traceback.print_exc()
         return jsonify({'message': f'An error occurred: {str(e)}'}), 500
 
     return jsonify({'embeddings': embeddings}), 200
