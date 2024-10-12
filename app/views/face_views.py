@@ -2,8 +2,7 @@ import traceback
 from typing import Optional
 from flask import Blueprint, request, jsonify
 from werkzeug.datastructures import FileStorage
-
-from app.services.face_service import calculate_embedding
+from app.services.face_service import calculate_embeddings
 
 face_bp = Blueprint('face', __name__)
 
@@ -24,7 +23,7 @@ def embedding():
         return jsonify({'message': 'File type not allowed'}), 400
 
     try:
-        embeddings = calculate_embedding(face_img)
+        embeddings = calculate_embeddings(face_img)
     except Exception as e:
         traceback.print_exc()
         return jsonify({'message': f'An error occurred: {str(e)}'}), 500

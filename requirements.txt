@@ -8,7 +8,8 @@ Werkzeug
 alembic
 pydantic
 numpy
-ultralytics
 pillow
 email-validator
 Flask-JWT-Extended
+insightface
+onnxruntime

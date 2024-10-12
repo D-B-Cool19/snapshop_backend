@@ -23,8 +23,8 @@ def register():
         username: str = Field(..., min_length=4, max_length=20,
                               description='Username must be between 4 and 20 characters')
         email: EmailStr
-        password: str = Field(..., min_length=8, max_length=20,
-                              description='Password must be between 8 and 20 characters')
+        password: str = Field(..., min_length=8, max_length=50,
+                              description='Password must be between 8 and 50 characters')
         gender: str = Field(..., pattern='^(male|female|unknown)$',
                             description='Gender must be either \'male\', \'female\', or \'unknown\'')
         age: Optional[int] = Field(None, ge=1, le=120, description='Age must be between 1 and 120')
