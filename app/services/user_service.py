@@ -1,9 +1,9 @@
 from werkzeug.security import generate_password_hash
 from ..models.user import User
 from ..extensions import db
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 
-# 创建用户服务函数
 def create_user(username, email, password, gender, age=None, face_img_url=None, role=0):
     try:
         password_hash = generate_password_hash(password)

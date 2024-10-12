@@ -2,6 +2,7 @@ import os
 import uuid
 from typing import Optional
 from flask import Blueprint, request, jsonify, url_for, current_app
+from flask_jwt_extended import create_access_token
 from pydantic import BaseModel, Field, EmailStr, field_validator, ValidationError
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
@@ -67,6 +68,8 @@ def register():
             file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
 
             try:
+                if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
+                    os.makedirs(current_app.config['UPLOAD_FOLDER'])
                 face_img.save(file_path)
                 face_img_url = url_for('static', filename=filename, _external=True)
             except Exception as e:
@@ -85,3 +88,33 @@ def register():
         return jsonify({'message': f'An error occurred: {str(e)}'}), 500
 
     return jsonify({'user': new_user.to_dict()}), 201
+
+
+@user_bp.route('/available/username/<username>', methods=['GET'])
+def is_username_available(username: str):
+    if User.query.filter_by(username=username).first() is not None:
+        return jsonify({'available': False}), 200
+    return jsonify({'available': True}), 200
+
+
+@user_bp.route('/available/email/<email>', methods=['GET'])
+def is_email_available(email: str):
+    if User.query.filter_by(email=email).first() is not None:
+        return jsonify({'available': False}), 200
+    return jsonify({'available': True}), 200
+
+
+@user_bp.route('/login', methods=['POST'])
+def login():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    print(username, password)
+
+    user = User.query.filter_by(username=username).first()
+    if user is None or not user.check_password(password):
+        return jsonify({'message': 'Invalid username or password'}), 400
+    access_token = create_access_token(identity=user.to_dict())
+    return jsonify({
+        'user': user.to_dict(),
+        'token': access_token
+    }), 200

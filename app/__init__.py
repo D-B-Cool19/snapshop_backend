@@ -1,4 +1,6 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
+
 from .extensions import db, migrate
 from .config import config
 
@@ -8,6 +10,9 @@ def create_app(config_name='default'):
 
     app.config.from_object(config[config_name])
     app.config.from_pyfile('config.py', silent=True)
+    app.config['JWT_SECRET_KEY'] = 'this_is_my_jwt_secret_key_cool19'
+
+    jwt = JWTManager(app)
 
     db.init_app(app)
     migrate.init_app(app, db)

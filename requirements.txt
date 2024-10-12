@@ -11,3 +11,4 @@ numpy
 ultralytics
 pillow
 email-validator
+Flask-JWT-Extended
