@@ -1,8 +1,8 @@
-"""empty message
+"""Auto migration
 
-Revision ID: b8e1bc2d08b7
+Revision ID: ff773e525789
 Revises: 
-Create Date: 2024-10-12 23:51:42.412422
+Create Date: 2024-10-13 20:02:55.284785
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b8e1bc2d08b7'
+revision = 'ff773e525789'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,6 +28,7 @@ def upgrade():
     sa.Column('face_img_url', sa.String(length=255), nullable=True),
     sa.Column('role', sa.Integer(), nullable=True),
     sa.Column('count', sa.Integer(), nullable=True),
+    sa.Column('embedding', sa.PickleType(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
