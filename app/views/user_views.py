@@ -1,12 +1,13 @@
 import os
 import uuid
-from typing import Optional
+from typing import Optional, List
 from flask import Blueprint, request, jsonify, url_for, current_app
 from flask_jwt_extended import create_access_token
 from pydantic import BaseModel, Field, EmailStr, field_validator, ValidationError
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 from ..models.user import User
+from ..services.face_service import cosine_similarity
 from ..services.user_service import create_user
 
 user_bp = Blueprint('user', __name__)
@@ -28,6 +29,7 @@ def register():
         gender: str = Field(..., pattern='^(male|female|unknown)$',
                             description='Gender must be either \'male\', \'female\', or \'unknown\'')
         age: Optional[int] = Field(None, ge=1, le=120, description='Age must be between 1 and 120')
+        embedding: Optional[List[float]] = Field(None, min_length=512, max_length=512)
 
         @field_validator('age', mode='before')
         def convert_age(cls, value):
@@ -50,6 +52,7 @@ def register():
     gender = data.gender
     age = data.age
     face_img: Optional[FileStorage] = request.files.get('faceImg')
+    embedding: Optional[List[float]] = data.embedding
 
     try:
         if User.query.filter_by(username=username).first() is not None:
@@ -71,9 +74,10 @@ def register():
                 if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
                     os.makedirs(current_app.config['UPLOAD_FOLDER'])
                 face_img.save(file_path)
-                face_img_url = url_for('static', filename=filename, _external=True)
+                if not embedding:
+                    return jsonify({'message': 'Face embedding is required'}), 400
             except Exception as e:
-                return jsonify({'message': f'Failed to save file: {str(e)}'}), 500
+                return jsonify({'message': f'An error occurred: {str(e)}'}), 500
 
         new_user = create_user(
             username=username,
@@ -81,7 +85,8 @@ def register():
             password=password,
             gender=gender,
             age=age,
-            face_img_url=face_img_url
+            face_img_url=face_img_url,
+            embedding=embedding
         )
 
     except Exception as e:
@@ -108,7 +113,6 @@ def is_email_available(email: str):
 def login():
     username = request.json.get('username')
     password = request.json.get('password')
-    print(username, password)
 
     user = User.query.filter_by(username=username).first()
     if user is None or not user.check_password(password):
@@ -118,3 +122,30 @@ def login():
         'user': user.to_dict(),
         'token': access_token
     }), 200
+
+
+@user_bp.route('/query', methods=['POST'])
+def login_with_face():
+    embedding = request.json.get('faceEmbedding')
+    users = User.query.all()
+    similar_users: List[User] = []
+
+    for user in users:
+        if user.embedding is None:
+            continue
+        similarity = cosine_similarity(embedding, user.embedding)
+        if similarity > 0.5:
+            similar_users.append(user)
+
+    if len(similar_users) == 0:
+        return jsonify({'message': 'No similar users found'}), 400
+
+    similar_users_list = [user.to_public_dict() for user in similar_users]
+    if len(similar_users) > 1:
+        return jsonify({'similarUsers': similar_users_list}), 200
+
+    login_info = {
+        'user': similar_users[0].to_dict(),
+        'token': create_access_token(identity=similar_users[0].to_dict())
+    }
+    return jsonify({'loginInfo': login_info}), 200

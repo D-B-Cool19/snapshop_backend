@@ -1,7 +1,6 @@
 import sys
 from io import BytesIO
 from typing import List, Tuple
-# from ultralytics import YOLO
 import onnxruntime as ort
 import numpy as np
 from werkzeug.datastructures import FileStorage
@@ -20,6 +19,13 @@ model_path = 'app/static/model/best.onnx'
 session = ort.InferenceSession(model_path)
 face_model = FaceAnalysis(providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
 face_model.prepare(ctx_id=0)
+
+
+def cosine_similarity(vec1, vec2):
+    dot_product = np.dot(vec1, vec2)
+    norm_vec1 = np.linalg.norm(vec1)
+    norm_vec2 = np.linalg.norm(vec2)
+    return dot_product / (norm_vec1 * norm_vec2)
 
 
 def calculate_embedding(face_img):
@@ -95,7 +101,8 @@ def calculate_embeddings(face_img: FileStorage) -> List[User]:
 
     for i in nms_indices:
         left, top, right, bottom = boxes[i]
-        single_face_img = img_source.crop((left, top, right, bottom))
+        # single_face_img = img_source
+        single_face_img = img_source.crop((left - 100, top - 100, right + 100, bottom + 100))
         single_face_img = np.array(single_face_img)
         face_embedding = calculate_embedding(single_face_img)
         new_user = User(
@@ -103,5 +110,4 @@ def calculate_embeddings(face_img: FileStorage) -> List[User]:
             xyxy=(left, top, right - left, bottom - top)
         )
         faces.append(new_user)
-    print(faces)
     return faces
