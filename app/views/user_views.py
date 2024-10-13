@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 from typing import Optional, List
@@ -41,6 +42,13 @@ def register():
                 return value
             raise ValueError('Age must be a valid integer')
 
+        @field_validator('embedding', mode='before')
+        def convert_embedding(cls, value):
+            if value is None or value == '':
+                return None
+            else:
+                return json.loads(value)
+
     try:
         data = UserDataModel(**request.form)
     except ValidationError as e:
@@ -69,7 +77,7 @@ def register():
             file_ext = os.path.splitext(secure_filename(face_img.filename))[1]
             filename = f'{uuid.uuid4().hex}{file_ext}'
             file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-
+            face_img_url = url_for('static', filename=f'uploads/{filename}', _external=True)
             try:
                 if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
                     os.makedirs(current_app.config['UPLOAD_FOLDER'])
@@ -126,7 +134,7 @@ def login():
 
 @user_bp.route('/query', methods=['POST'])
 def login_with_face():
-    embedding = request.json.get('faceEmbedding')
+    embedding = request.json.get('embedding')
     users = User.query.all()
     similar_users: List[User] = []
 
