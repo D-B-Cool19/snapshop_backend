@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from ..extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -14,6 +14,7 @@ class User(db.Model):
     face_img_url: Optional[str] = db.Column(db.String(255))
     role: int = db.Column(db.Integer)
     count: int = db.Column(db.Integer, default=0)
+    embedding: Optional[List[float]] = db.Column(db.PickleType)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -31,4 +32,11 @@ class User(db.Model):
             "faceImgUrl": self.face_img_url,
             "role": self.role,
             "count": self.count
+        }
+
+    def to_public_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "faceImgUrl": self.face_img_url
         }
