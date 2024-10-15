@@ -172,7 +172,7 @@ def get_user():
         return jsonify({'message': 'Invalid token'}), 400
 
 
-@user_bp.route('/auth', methods=['HEAD'])
+@user_bp.route('/auth', methods=['GET'])
 @jwt_required()
 def auth():
     return jsonify({'message': 'Authorized'}), 200
