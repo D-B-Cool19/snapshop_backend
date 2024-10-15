@@ -32,6 +32,8 @@ def upload_image(image: FileStorage):
     file_ext = os.path.splitext(secure_filename(image.filename))[1]
     filename = f'{uuid.uuid4().hex}{file_ext}'
     image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+    if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
+        os.makedirs(current_app.config['UPLOAD_FOLDER'])
     image.save(image_path)
     return url_for('static', filename=f'uploads/{filename}')
 
