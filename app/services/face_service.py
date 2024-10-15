@@ -101,7 +101,6 @@ def calculate_embeddings(face_img: FileStorage) -> List[User]:
 
     for i in nms_indices:
         left, top, right, bottom = boxes[i]
-        # single_face_img = img_source
         single_face_img = img_source.crop((left - 100, top - 100, right + 100, bottom + 100))
         single_face_img = np.array(single_face_img)
         face_embedding = calculate_embedding(single_face_img)

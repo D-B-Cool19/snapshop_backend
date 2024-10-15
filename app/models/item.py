@@ -8,7 +8,7 @@ class Item(db.Model):
     name: str = db.Column(db.String(80), unique=True, nullable=False)
     description: str = db.Column(db.String(1200), nullable=False)
     features: str = db.Column(db.String(1200), nullable=False)
-    price: int = db.Column(db.Integer, nullable=False)
+    price: float = db.Column(db.Float, nullable=False)
     images: List[str] = db.Column(db.PickleType, nullable=False)
     rate: float = db.Column(db.Float, default=0)
     reviews: int = db.Column(db.Integer, default=0)
@@ -32,5 +32,6 @@ class Item(db.Model):
             "name": self.name,
             "price": self.price,
             "rate": self.rate,
-            "image": self.images[0] if self.images else None
+            "image": self.images[0] if self.images else None,
+            "description": self.description
         }

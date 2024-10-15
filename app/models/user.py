@@ -16,6 +16,7 @@ class User(db.Model):
     count: int = db.Column(db.Integer, default=0)
     embedding: Optional[List[float]] = db.Column(db.PickleType)
     cart_items = db.relationship('CartItem', back_populates='user', cascade="all, delete-orphan")
+    last_login = db.Column(db.DateTime, default=None)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

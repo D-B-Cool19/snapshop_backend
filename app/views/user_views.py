@@ -7,9 +7,11 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 from pydantic import BaseModel, Field, EmailStr, field_validator, ValidationError
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
+
+from .item_views import check_user_permission
 from ..models.user import User
 from ..services.face_service import cosine_similarity
-from ..services.user_service import create_user
+from ..services.user_service import create_user, delete_user, update_user_login
 
 user_bp = Blueprint('user', __name__)
 
@@ -167,6 +169,7 @@ def get_user():
         user = User.query.get(current_user['id'])
         if user is None:
             return jsonify({'message': 'User not found'}), 404
+        user = update_user_login(user)
         return jsonify({'user': user.to_dict()}), 200
     except Exception as e:
         return jsonify({'message': 'Invalid token'}), 400
@@ -176,3 +179,36 @@ def get_user():
 @jwt_required()
 def auth():
     return jsonify({'message': 'Authorized'}), 200
+
+
+@user_bp.route('/all', methods=['GET'])
+@jwt_required()
+def get_all_user():
+    try:
+        if not check_user_permission():
+            return jsonify({'message': 'Unauthorized'}), 403
+    except Exception as e:
+        return jsonify({'message': str(e)}), 403
+
+    users = User.query.all()
+    return jsonify({'users': [user.to_dict() for user in users]}), 200
+
+
+@user_bp.route('/<int:user_id>', methods=['DELETE'])
+@jwt_required()
+def remove_user(user_id: int):
+    try:
+        if not check_user_permission():
+            return jsonify({'message': 'Unauthorized'}), 403
+    except Exception as e:
+        return jsonify({'message': str(e)}), 403
+
+    user = User.query.get(user_id)
+    if user is None:
+        return jsonify({'message': 'User not found'}), 404
+
+    try:
+        delete_user(user)
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+    return jsonify({'message': 'User deleted'}), 200

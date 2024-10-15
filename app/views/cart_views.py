@@ -1,3 +1,4 @@
+import math
 from typing import Optional, List
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -108,13 +109,17 @@ def checkout():
         if total_price < discount:
             return jsonify({'message': 'Use too much credits'}), 400
 
-        user = deduct_user_count(user, count)
+        price = total_price - discount
+        refund = math.floor(price / 5)
+        user = deduct_user_count(user, count - refund)
+
         for cart_item in cart_items:
             delete_cart_item(cart_item)
         return jsonify({'message': 'Checkout successful',
                         'user': user.to_dict(),
                         'originalPrice': total_price,
                         'discount': discount,
+                        'refund': refund,
                         'totalPrice': total_price - discount}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 500
