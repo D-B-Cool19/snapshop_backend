@@ -17,7 +17,8 @@ def create_user(username, email, password, gender, age=None, face_img_url=None, 
             face_img_url=face_img_url,
             role=role,
             embedding=embedding,
-            last_login=None
+            last_login=None,
+            count=100
         )
         db.session.add(new_user)
         db.session.commit()
