@@ -36,7 +36,7 @@ def calculate_embedding(face_img):
     return []
 
 
-def nms(boxes, scores, iou_threshold=0.5):
+def nms(boxes, scores, iou_threshold=0.3):
     if len(boxes) == 0:
         return []
     boxes = np.array(boxes)
@@ -97,7 +97,7 @@ def calculate_embeddings(face_img: FileStorage) -> List[User]:
         boxes.append((left, top, left + width, top + height))
         confidences.append(conf)
 
-    nms_indices = nms(boxes, confidences, iou_threshold=0.5)
+    nms_indices = nms(boxes, confidences, iou_threshold=0.3)
 
     for i in nms_indices:
         left, top, right, bottom = boxes[i]
