@@ -23,3 +23,16 @@ def create_user(username, email, password, gender, age=None, face_img_url=None, 
     except Exception as e:
         db.session.rollback()
         raise e
+
+
+def deduct_user_count(user: User, count: int):
+    try:
+        if user.count < count:
+            raise ValueError(f'User {user.username} does not have enough credits')
+        user.count -= count
+        db.session.commit()
+
+        return user
+    except Exception as e:
+        db.session.rollback()
+        raise e

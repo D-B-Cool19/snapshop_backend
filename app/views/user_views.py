@@ -3,7 +3,7 @@ import os
 import uuid
 from typing import Optional, List
 from flask import Blueprint, request, jsonify, url_for, current_app
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from pydantic import BaseModel, Field, EmailStr, field_validator, ValidationError
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
@@ -157,3 +157,22 @@ def login_with_face():
         'token': create_access_token(identity=similar_users[0].to_dict())
     }
     return jsonify({'loginInfo': login_info}), 200
+
+
+@user_bp.route('', methods=['GET'])
+@jwt_required()
+def get_user():
+    try:
+        current_user = get_jwt_identity()
+        user = User.query.get(current_user['id'])
+        if user is None:
+            return jsonify({'message': 'User not found'}), 404
+        return jsonify({'user': user.to_dict()}), 200
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 400
+
+
+@user_bp.route('/auth', methods=['HEAD'])
+@jwt_required()
+def auth():
+    return jsonify({'message': 'Authorized'}), 200
